@@ -1,0 +1,1349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WorkBook xmlVersion="20170720" releaseVersion="10.0.0">
+<TableDataMap>
+<TableData name="严重差错万时率" class="com.fr.data.impl.DBTableData">
+<Parameters>
+<Parameter>
+<Attributes name="mth"/>
+<O>
+<![CDATA[2021]]></O>
+</Parameter>
+</Parameters>
+<Attributes maxMemRowCount="-1"/>
+<Connection class="com.fr.data.impl.NameDatabaseConnection">
+<DatabaseName>
+<![CDATA[MYSQL_共享数据平台]]></DatabaseName>
+</Connection>
+<Query>
+<![CDATA[select a.万时率 from (
+SELECT 
+      concat('${mth}','全年') 年月,
+      '全年' 月份,
+      rate_cum 万时率
+FROM ads_sec_oe_event_survey_cm_all_mi
+where es_qualative_cn = '严重差错'
+  and period_date_year = '${mth}'
+  and period_date = concat('${mth}',DATE_FORMAT(date_add(now(),interval -1 month),'%m'))
+union all
+SELECT 
+      period_date 年月,
+      right(period_date,2) 月份, 
+      rate 万时率
+FROM ads_sec_oe_event_survey_cm_all_mi
+where es_qualative_cn = '严重差错'
+  and period_date_year = '${mth}'
+  and period_date <= concat('${mth}',DATE_FORMAT(date_add(now(),interval -1 month),'%m'))
+group by period_date,right(period_date,2)
+) a
+order by case a.月份 when '全年' then 1
+                     when '01' then 2
+                      when '02' then 3
+                       when '03' then 4
+                        when '04' then 5
+                         when '05' then 6
+                          when '06' then 7
+                           when '07' then 8
+                            when '08' then 9
+                             when '09' then 10
+                              when '10' then 11
+                               when '11' then 12
+                                when '12' then 13 end
+]]></Query>
+<PageQuery>
+<![CDATA[]]></PageQuery>
+</TableData>
+<TableData name="目标" class="com.fr.data.impl.EmbeddedTableData">
+<Parameters/>
+<DSName>
+<![CDATA[]]></DSName>
+<ColumnNames>
+<![CDATA[月份,,.,,目标]]></ColumnNames>
+<ColumnTypes>
+<![CDATA[java.lang.String,java.lang.Double]]></ColumnTypes>
+<RowData ColumnTypes="java.lang.String,java.lang.Double">
+<![CDATA[:!^upJ1q63cuUbX!=\c<BJ1.Z`IcNn6*`5S#K*bg,i$\G4a5giFd$,F#BC)h!7Afd>8JZ.ET
+a0*bh6:HkqgdtrhF`a$>pEDSHF[u!XZq5!U;pG*5L^)[J^%+~
+]]></RowData>
+</TableData>
+<TableData name="年月" class="com.fr.data.impl.DBTableData">
+<Parameters/>
+<Attributes maxMemRowCount="-1"/>
+<Connection class="com.fr.data.impl.NameDatabaseConnection">
+<DatabaseName>
+<![CDATA[MYSQL_共享数据平台]]></DatabaseName>
+</Connection>
+<Query>
+<![CDATA[select a.* from (
+select
+distinct period_date 年月
+from ads_sec_oe_event_survey_cm_all_mi
+where period_date_year >= '2021'
+union all
+select
+distinct period_date_year 年月
+from ads_sec_oe_event_survey_cm_all_mi
+where period_date_year >= '2021') a
+order by 1]]></Query>
+<PageQuery>
+<![CDATA[]]></PageQuery>
+</TableData>
+<TableData name="事故事故征候" class="com.fr.data.impl.DBTableData">
+<Parameters>
+<Parameter>
+<Attributes name="mth"/>
+<O>
+<![CDATA[2021]]></O>
+</Parameter>
+</Parameters>
+<Attributes maxMemRowCount="-1"/>
+<Connection class="com.fr.data.impl.NameDatabaseConnection">
+<DatabaseName>
+<![CDATA[MYSQL_共享数据平台]]></DatabaseName>
+</Connection>
+<Query>
+<![CDATA[select a.事件数量 from (
+SELECT 
+      concat('${mth}','全年') 年月,
+      '全年' 月份,
+      sum(cast(ES_COUNT_cum as signed)) 事件数量
+FROM ads_sec_oe_event_survey_cm_all_mi
+where es_qualative_cn in ('事故','事故征候')
+  and period_date_year = '${mth}'
+  and period_date = concat('${mth}',DATE_FORMAT(date_add(now(),interval -1 month),'%m'))
+union all
+SELECT 
+      period_date 年月,
+      right(period_date,2) 月份, 
+      sum(cast(ES_COUNT as signed)) 事件数量
+FROM ads_sec_oe_event_survey_cm_all_mi
+where es_qualative_cn in ('事故','事故征候')
+  and period_date_year = '${mth}'
+  and period_date <= concat('${mth}',DATE_FORMAT(date_add(now(),interval -1 month),'%m'))
+group by period_date,right(period_date,2)
+) a
+order by case a.月份 when '全年' then 1
+                     when '01' then 2
+                      when '02' then 3
+                       when '03' then 4
+                        when '04' then 5
+                         when '05' then 6
+                          when '06' then 7
+                           when '07' then 8
+                            when '08' then 9
+                             when '09' then 10
+                              when '10' then 11
+                               when '11' then 12
+                                when '12' then 13 end
+]]></Query>
+<PageQuery>
+<![CDATA[]]></PageQuery>
+</TableData>
+<TableData name="数据更新时间" class="com.fr.data.impl.DBTableData">
+<Parameters/>
+<Attributes maxMemRowCount="-1"/>
+<Connection class="com.fr.data.impl.NameDatabaseConnection">
+<DatabaseName>
+<![CDATA[MYSQL_共享数据平台]]></DatabaseName>
+</Connection>
+<Query>
+<![CDATA[select
+distinct date_format(load_tm,'%Y-%m-%d') 加载时间
+from ads_sec_oe_event_survey_cm_all_mi
+where period_date_year >= '2021']]></Query>
+<PageQuery>
+<![CDATA[]]></PageQuery>
+</TableData>
+<TableData name="月份" class="com.fr.data.impl.EmbeddedTableData">
+<Parameters/>
+<DSName>
+<![CDATA[]]></DSName>
+<ColumnNames>
+<![CDATA[月份]]></ColumnNames>
+<ColumnTypes>
+<![CDATA[java.lang.String]]></ColumnTypes>
+<RowData ColumnTypes="java.lang.String">
+<![CDATA[1GUX>I+l0kl-:kc7R3i%+bVV&:rX'h"@AMC-o2-?%\YErPU2\P1k8C6;[eWc~
+]]></RowData>
+</TableData>
+<TableData name="ds1" class="com.fr.data.impl.DBTableData">
+<Parameters>
+<Parameter>
+<Attributes name="mth"/>
+<O>
+<![CDATA[2021]]></O>
+</Parameter>
+</Parameters>
+<Attributes maxMemRowCount="-1"/>
+<Connection class="com.fr.data.impl.NameDatabaseConnection">
+<DatabaseName>
+<![CDATA[MYSQL_共享数据平台]]></DatabaseName>
+</Connection>
+<Query>
+<![CDATA[select a.年月,b.事件数量,c.万时率,d.吨公里成本目标,e.考核准点率目标,f.考核准点率,f.考核准点率年度累计 from
+(
+select concat('${mth}',t.月份) 年月,t.月份 from (
+select
+      distinct(right(period_date,2)) 月份 
+from ads_sec_oe_event_survey_cm_all_mi
+where period_date_year = '2019'
+union all
+select '全年' from dual) t
+) a
+left join 
+(
+SELECT 
+      concat(period_date_year,'全年') 年月,
+      '全年' 月份,
+      sum(cast(ES_COUNT_CUM as signed)) 事件数量
+FROM ads_sec_oe_event_survey_cm_all_mi
+where es_qualative_cn in ('事故','事故征候')
+  and period_date_year = '${mth}'
+  and period_date = concat('${mth}',if('${mth}'<DATE_FORMAT(date_add(now(),interval -1 month),'%Y'),12,DATE_FORMAT(date_add(now(),interval -1 month),'%m')))
+group by concat(period_date_year,'全年')
+union all
+SELECT 
+      period_date 年月,
+      right(period_date,2) 月份, 
+      sum(cast(ES_COUNT_CUM as signed)) 事件数量
+FROM ads_sec_oe_event_survey_cm_all_mi
+where es_qualative_cn in ('事故','事故征候')
+  and period_date_year = '${mth}'
+group by period_date,right(period_date,2)
+) b on a.年月 = b.年月
+left join (
+SELECT 
+      concat(period_date_year,'全年') 年月,
+      '全年' 月份,
+      rate_cum 万时率
+FROM ads_sec_oe_event_survey_cm_all_mi
+where es_qualative_cn = '严重差错'
+  and period_date_year = '${mth}'
+  and period_date = concat('${mth}',if('${mth}'<DATE_FORMAT(date_add(now(),interval -1 month),'%Y'),12,DATE_FORMAT(date_add(now(),interval -1 month),'%m')))
+union all
+SELECT 
+      period_date 年月,
+      right(period_date,2) 月份, 
+      rate_cum 万时率
+FROM ads_sec_oe_event_survey_cm_all_mi
+where es_qualative_cn = '严重差错'
+  and period_date_year = '${mth}'
+group by period_date,right(period_date,2)
+) c on a.年月 = c.年月
+left join (
+SELECT 
+      t.period_date 年月
+     , t.period_date_year 年份
+     , t.period_date_month 月份
+     , t.target 吨公里成本目标
+FROM diap.conf_busi_atkm_cost_tar t
+where period_date_year = '${mth}'
+) d on a.年月 = d.年月
+left join (
+SELECT 
+      t.period_date 年月
+     , t.period_date_year 年份
+     , t.period_date_month 月份
+     , t.target 考核准点率目标
+FROM diap.conf_busi_otr_check_tar t
+where period_date_year = '${mth}'
+) e on a.年月 = e.年月
+left join (
+SELECT 
+      concat(period_date_year,'全年') 年月,
+      otr_check_year 考核准点率年度累计,
+      otr_check_mth 考核准点率
+FROM conf_busi_res_of_eva_ind
+where period_date_year = '${mth}'
+  and period_date = DATE_FORMAT(date_add(now(),interval -1 month),'%Y%m')
+union all
+SELECT 
+      period_date 年月,
+      otr_check_year 考核准点率年度累计,
+      otr_check_mth 考核准点率
+FROM conf_busi_res_of_eva_ind
+where period_date_year = '${mth}'
+) f on a.年月 = f.年月
+order by case a.月份 when '全年' then 1
+                     when '01' then 2
+                      when '02' then 3
+                       when '03' then 4
+                        when '04' then 5
+                         when '05' then 6
+                          when '06' then 7
+                           when '07' then 8
+                            when '08' then 9
+                             when '09' then 10
+                              when '10' then 11
+                               when '11' then 12
+                                when '12' then 13 end
+]]></Query>
+<PageQuery>
+<![CDATA[]]></PageQuery>
+</TableData>
+<TableData name="ds2" class="com.fr.data.impl.DBTableData">
+<Parameters>
+<Parameter>
+<Attributes name="mth"/>
+<O>
+<![CDATA[2021]]></O>
+</Parameter>
+</Parameters>
+<Attributes maxMemRowCount="-1"/>
+<Connection class="com.fr.data.impl.NameDatabaseConnection">
+<DatabaseName>
+<![CDATA[diapsec_noshare]]></DatabaseName>
+</Connection>
+<Query>
+<![CDATA[select* from(
+SELECT 
+      concat(left(month,4),'全年') 年月,
+      '全年' 月份,
+      sum(target_t_km*nofuel_tar_t_km_amt)/sum(target_t_km) 年度累计吨公里成本
+FROM air_abc_fact_kh_zb
+where left(month,4) = '${mth}'
+  and month <= concat('${mth}',if('${mth}'<DATE_FORMAT(date_add(now(),interval -1 month),'%Y'),12,DATE_FORMAT(date_add(now(),interval -1 month),'%m')))
+group by concat(left(month,4),'全年')
+union all
+select 
+      month 年月,
+      right(month,2) 月份, 
+      sum(target_t_km*nofuel_tar_t_km_amt)/sum(target_t_km) 年度累计吨公里成本
+from air_abc_fact_kh_zb
+where left(month,4) = '${mth}'
+  and month <= concat('${mth}',if('${mth}'<DATE_FORMAT(date_add(now(),interval -1 month),'%Y'),12,DATE_FORMAT(date_add(now(),interval -1 month),'%m')))
+group by month,right(month,2)
+) a
+order by case a.月份 when '全年' then 1
+                     when '01' then 2
+                      when '02' then 3
+                       when '03' then 4
+                        when '04' then 5
+                         when '05' then 6
+                          when '06' then 7
+                           when '07' then 8
+                            when '08' then 9
+                             when '09' then 10
+                              when '10' then 11
+                               when '11' then 12
+                                when '12' then 13 end
+]]></Query>
+<PageQuery>
+<![CDATA[]]></PageQuery>
+</TableData>
+<TableData name="ds3" class="com.fr.data.impl.DBTableData">
+<Parameters>
+<Parameter>
+<Attributes name="mth"/>
+<O>
+<![CDATA[]]></O>
+</Parameter>
+</Parameters>
+<Attributes maxMemRowCount="-1"/>
+<Connection class="com.fr.data.impl.NameDatabaseConnection">
+<DatabaseName>
+<![CDATA[diapsec_noshare]]></DatabaseName>
+</Connection>
+<Query>
+<![CDATA[select* from(
+SELECT 
+      concat(left(month,4),'全年') 年月,
+      '全年' 月份,
+      sum(target_t_km*nofuel_tar_t_km_amt)/sum(target_t_km) 年度累计吨公里成本
+FROM air_abc_fact_kh_zb
+where left(month,4) = '${mth}'
+  and month <= concat('${mth}',if('${mth}'<DATE_FORMAT(date_add(now(),interval -1 month),'%Y'),12,DATE_FORMAT(date_add(now(),interval -1 month),'%m')))
+group by concat(left(month,4),'全年')
+union all
+select 
+      concat(left(month,4),'01') 年月,
+      '01' 月份, 
+      sum(target_t_km*nofuel_tar_t_km_amt)/sum(target_t_km) 年度累计吨公里成本
+from air_abc_fact_kh_zb
+where left(month,4) = '${mth}'
+  and month <= concat('${mth}','01')
+group by concat(left(month,4),'01')
+union all
+select 
+      concat(left(month,4),'02') 年月,
+      '02' 月份, 
+      sum(target_t_km*nofuel_tar_t_km_amt)/sum(target_t_km) 年度累计吨公里成本
+from air_abc_fact_kh_zb
+where left(month,4) = '${mth}'
+  and month <= concat('${mth}','02')
+group by concat(left(month,4),'02')
+union all
+select 
+      concat(left(month,4),'03') 年月,
+      '03' 月份, 
+      sum(target_t_km*nofuel_tar_t_km_amt)/sum(target_t_km) 年度累计吨公里成本
+from air_abc_fact_kh_zb
+where left(month,4) = '${mth}'
+  and month <= concat('${mth}','03')
+group by concat(left(month,4),'03')
+union all
+select 
+      concat(left(month,4),'04') 年月,
+      '04' 月份, 
+      sum(target_t_km*nofuel_tar_t_km_amt)/sum(target_t_km) 年度累计吨公里成本
+from air_abc_fact_kh_zb
+where left(month,4) = '${mth}'
+  and month <= concat('${mth}','04')
+group by concat(left(month,4),'04')
+union all
+select 
+      concat(left(month,4),'05') 年月,
+      '05' 月份, 
+      sum(target_t_km*nofuel_tar_t_km_amt)/sum(target_t_km) 年度累计吨公里成本
+from air_abc_fact_kh_zb
+where left(month,4) = '${mth}'
+  and month <= concat('${mth}','05')
+group by concat(left(month,4),'05')
+union all
+select 
+      concat(left(month,4),'06') 年月,
+      '06' 月份, 
+      sum(target_t_km*nofuel_tar_t_km_amt)/sum(target_t_km) 年度累计吨公里成本
+from air_abc_fact_kh_zb
+where left(month,4) = '${mth}'
+  and month <= concat('${mth}','06')
+group by concat(left(month,4),'06')
+union all
+select 
+      concat(left(month,4),'07') 年月,
+      '07' 月份, 
+      sum(target_t_km*nofuel_tar_t_km_amt)/sum(target_t_km) 年度累计吨公里成本
+from air_abc_fact_kh_zb
+where left(month,4) = '${mth}'
+  and month <= concat('${mth}','07')
+group by concat(left(month,4),'07')
+union all
+select 
+      concat(left(month,4),'08') 年月,
+      '08' 月份, 
+      sum(target_t_km*nofuel_tar_t_km_amt)/sum(target_t_km) 年度累计吨公里成本
+from air_abc_fact_kh_zb
+where left(month,4) = '${mth}'
+  and month <= concat('${mth}','08')
+group by concat(left(month,4),'08')
+union all
+select 
+      concat(left(month,4),'09') 年月,
+      '09' 月份, 
+      sum(target_t_km*nofuel_tar_t_km_amt)/sum(target_t_km) 年度累计吨公里成本
+from air_abc_fact_kh_zb
+where left(month,4) = '${mth}'
+  and month <= concat('${mth}','09')
+group by concat(left(month,4),'09')
+union all
+select 
+      concat(left(month,4),'10') 年月,
+      '10' 月份, 
+      sum(target_t_km*nofuel_tar_t_km_amt)/sum(target_t_km) 年度累计吨公里成本
+from air_abc_fact_kh_zb
+where left(month,4) = '${mth}'
+  and month <= concat('${mth}','10')
+group by concat(left(month,4),'10')
+union all
+select 
+      concat(left(month,4),'11') 年月,
+      '11' 月份, 
+      sum(target_t_km*nofuel_tar_t_km_amt)/sum(target_t_km) 年度累计吨公里成本
+from air_abc_fact_kh_zb
+where left(month,4) = '${mth}'
+  and month <= concat('${mth}','11')
+group by concat(left(month,4),'11')
+union all
+select 
+      concat(left(month,4),'12') 年月,
+      '12' 月份, 
+      sum(target_t_km*nofuel_tar_t_km_amt)/sum(target_t_km) 年度累计吨公里成本
+from air_abc_fact_kh_zb
+where left(month,4) = '${mth}'
+  and month <= concat('${mth}','12')
+group by concat(left(month,4),'12')
+) a
+order by case a.月份 when '全年' then 1
+                     when '01' then 2
+                      when '02' then 3
+                       when '03' then 4
+                        when '04' then 5
+                         when '05' then 6
+                          when '06' then 7
+                           when '07' then 8
+                            when '08' then 9
+                             when '09' then 10
+                              when '10' then 11
+                               when '11' then 12
+                                when '12' then 13 end
+]]></Query>
+<PageQuery>
+<![CDATA[]]></PageQuery>
+</TableData>
+</TableDataMap>
+<ReportWebAttr>
+<ServerPrinter/>
+<WebPageContent>
+<ToolBars>
+<ToolBarManager>
+<Location>
+<Embed position="1"/>
+</Location>
+<ToolBar>
+<Widget class="com.fr.report.web.button.page.First">
+<WidgetAttr description="">
+<MobileBookMark useBookMark="false" bookMarkName="" frozen="false"/>
+<PrivilegeControl/>
+</WidgetAttr>
+<Text>
+<![CDATA[${i18n('Fine-Engine_Report_ReportServerP_First')}]]></Text>
+<Hotkeys>
+<![CDATA[]]></Hotkeys>
+<IconName>
+<![CDATA[first]]></IconName>
+</Widget>
+<Widget class="com.fr.report.web.button.page.Previous">
+<WidgetAttr description="">
+<MobileBookMark useBookMark="false" bookMarkName="" frozen="false"/>
+<PrivilegeControl/>
+</WidgetAttr>
+<Text>
+<![CDATA[${i18n('Fine-Engine_Report_ReportServerP_Previous')}]]></Text>
+<Hotkeys>
+<![CDATA[]]></Hotkeys>
+<IconName>
+<![CDATA[previous]]></IconName>
+</Widget>
+<Widget class="com.fr.report.web.button.page.PageNavi">
+<WidgetAttr description="">
+<MobileBookMark useBookMark="false" bookMarkName="" frozen="false"/>
+<PrivilegeControl/>
+</WidgetAttr>
+</Widget>
+<Widget class="com.fr.report.web.button.page.Next">
+<WidgetAttr description="">
+<MobileBookMark useBookMark="false" bookMarkName="" frozen="false"/>
+<PrivilegeControl/>
+</WidgetAttr>
+<Text>
+<![CDATA[${i18n('Fine-Engine_ReportServerP_Next')}]]></Text>
+<Hotkeys>
+<![CDATA[]]></Hotkeys>
+<IconName>
+<![CDATA[next]]></IconName>
+</Widget>
+<Widget class="com.fr.report.web.button.page.Last">
+<WidgetAttr description="">
+<MobileBookMark useBookMark="false" bookMarkName="" frozen="false"/>
+<PrivilegeControl/>
+</WidgetAttr>
+<Text>
+<![CDATA[${i18n('Fine-Engine_Report_ReportServerP_Last')}]]></Text>
+<Hotkeys>
+<![CDATA[]]></Hotkeys>
+<IconName>
+<![CDATA[last]]></IconName>
+</Widget>
+<Widget class="com.fr.report.web.button.NewPrint">
+<WidgetAttr description="">
+<MobileBookMark useBookMark="false" bookMarkName="" frozen="false"/>
+<PrivilegeControl/>
+</WidgetAttr>
+<Text>
+<![CDATA[${i18n('Fine-Engine_Print')}]]></Text>
+<Hotkeys>
+<![CDATA[]]></Hotkeys>
+<IconName>
+<![CDATA[print]]></IconName>
+</Widget>
+<Widget class="com.fr.report.web.button.Export">
+<WidgetAttr description="">
+<MobileBookMark useBookMark="false" bookMarkName="" frozen="false"/>
+<PrivilegeControl/>
+</WidgetAttr>
+<Text>
+<![CDATA[${i18n('Export')}]]></Text>
+<Hotkeys>
+<![CDATA[]]></Hotkeys>
+<IconName>
+<![CDATA[export]]></IconName>
+<Buttons pdf="true" excelP="true" excelO="true" excelS="true" word="true" image="true" html="true"/>
+</Widget>
+<Widget class="com.fr.report.web.button.Email">
+<WidgetAttr description="">
+<MobileBookMark useBookMark="false" bookMarkName="" frozen="false"/>
+<PrivilegeControl/>
+</WidgetAttr>
+<Text>
+<![CDATA[${i18n('Fine-Engine_Report_Email')}]]></Text>
+<Hotkeys>
+<![CDATA[]]></Hotkeys>
+<IconName>
+<![CDATA[email]]></IconName>
+<EmailButton customConsignee="true" consigneeByDepartment="false" consigneeByRole="false"/>
+</Widget>
+</ToolBar>
+</ToolBarManager>
+</ToolBars>
+<WebPage isPage="true" showAsImage="false" autoScale="false" tdHeavy="false"/>
+</WebPageContent>
+<WebWriteContent>
+<ToolBars>
+<ToolBarManager>
+<Location>
+<Embed position="1"/>
+</Location>
+<ToolBar>
+<Widget class="com.fr.report.web.button.write.Submit">
+<WidgetAttr description="">
+<MobileBookMark useBookMark="false" bookMarkName="" frozen="false"/>
+<PrivilegeControl/>
+</WidgetAttr>
+<Text>
+<![CDATA[${i18n('Fine-Engine_Report_Utils_Submit')}]]></Text>
+<Hotkeys>
+<![CDATA[]]></Hotkeys>
+<IconName>
+<![CDATA[submit]]></IconName>
+<Verify failVerifySubmit="false" value="true"/>
+<Sheet onlySubmitSelect="false"/>
+</Widget>
+<Widget class="com.fr.report.web.button.write.Verify">
+<WidgetAttr description="">
+<MobileBookMark useBookMark="false" bookMarkName="" frozen="false"/>
+<PrivilegeControl/>
+</WidgetAttr>
+<Text>
+<![CDATA[${i18n('Fine-Engine_Report_Verify_Data')}]]></Text>
+<Hotkeys>
+<![CDATA[]]></Hotkeys>
+<IconName>
+<![CDATA[verify]]></IconName>
+</Widget>
+<Widget class="com.fr.report.web.button.NewPrint">
+<WidgetAttr description="">
+<MobileBookMark useBookMark="false" bookMarkName="" frozen="false"/>
+<PrivilegeControl/>
+</WidgetAttr>
+<Text>
+<![CDATA[${i18n('Fine-Engine_Print')}]]></Text>
+<Hotkeys>
+<![CDATA[]]></Hotkeys>
+<IconName>
+<![CDATA[print]]></IconName>
+</Widget>
+<Widget class="com.fr.report.web.button.Export">
+<WidgetAttr description="">
+<MobileBookMark useBookMark="false" bookMarkName="" frozen="false"/>
+<PrivilegeControl/>
+</WidgetAttr>
+<Text>
+<![CDATA[${i18n('Export')}]]></Text>
+<Hotkeys>
+<![CDATA[]]></Hotkeys>
+<IconName>
+<![CDATA[export]]></IconName>
+<Buttons pdf="true" excelP="true" excelO="true" excelS="true" word="true" image="true" html="true"/>
+</Widget>
+<Widget class="com.fr.report.web.button.Email">
+<WidgetAttr description="">
+<MobileBookMark useBookMark="false" bookMarkName="" frozen="false"/>
+<PrivilegeControl/>
+</WidgetAttr>
+<Text>
+<![CDATA[${i18n('Fine-Engine_Report_Email')}]]></Text>
+<Hotkeys>
+<![CDATA[]]></Hotkeys>
+<IconName>
+<![CDATA[email]]></IconName>
+<EmailButton customConsignee="true" consigneeByDepartment="false" consigneeByRole="false"/>
+</Widget>
+<Widget class="com.fr.report.web.button.write.AppendColumnRow">
+<WidgetAttr description="">
+<MobileBookMark useBookMark="false" bookMarkName="" frozen="false"/>
+<PrivilegeControl/>
+</WidgetAttr>
+<Text>
+<![CDATA[${i18n('Fine-Engine_Add_Record')}]]></Text>
+<Hotkeys>
+<![CDATA[]]></Hotkeys>
+<IconName>
+<![CDATA[appendrow]]></IconName>
+</Widget>
+<Widget class="com.fr.report.web.button.write.ShowCellValue">
+<WidgetAttr description="">
+<MobileBookMark useBookMark="false" bookMarkName="" frozen="false"/>
+<PrivilegeControl/>
+</WidgetAttr>
+<widgetValue/>
+<LabelAttr verticalcenter="true" textalign="0" autoline="false"/>
+<FRFont name="SimSun" style="0" size="72"/>
+<border style="0" color="-723724"/>
+</Widget>
+</ToolBar>
+</ToolBarManager>
+</ToolBars>
+<EditRowColor setColor="false"/>
+<WebWrite SheetPosition="3"/>
+<RptLocation isShowAtLeft="true"/>
+<UnloadCheck/>
+<ShowWidgets/>
+<OtherAttr autoStash="false"/>
+</WebWriteContent>
+</ReportWebAttr>
+<ReportFitAttr fitStateInPC="2" fitFont="true"/>
+<ElementCaseMobileAttr>
+<ElementCaseMobileAttrProvider horizontal="1" vertical="1" zoom="true" refresh="false" isUseHTML="false" isMobileCanvasSize="false" appearRefresh="false" allowFullScreen="false" allowDoubleClickOrZoom="true" functionalWhenUnactivated="false"/>
+</ElementCaseMobileAttr>
+<Report class="com.fr.report.worksheet.WorkSheet" name="sheet1">
+<ReportPageAttr>
+<HR F="0" T="0"/>
+<FR/>
+<HC F="0" T="3"/>
+<FC/>
+<UPFCR COLUMN="true" ROW="true"/>
+</ReportPageAttr>
+<ColumnPrivilegeControl/>
+<RowPrivilegeControl/>
+<RowHeight defaultValue="723900">
+<![CDATA[1296000,1296000,0,1296000,1296000,1296000,1296000,1296000,1296000,1296000,1296000,723900]]></RowHeight>
+<ColumnWidth defaultValue="2743200">
+<![CDATA[2880000,5760000,2880000,2160000,2880000,2743200,2743200,2743200,2743200,2743200,2743200]]></ColumnWidth>
+<CellElementList>
+<C c="0" r="0" cs="4" s="0">
+<O t="XMLable" class="com.fr.base.Formula">
+<Attributes>
+<![CDATA[=left($mth, 4) + "年顺丰航空B项考评指标"]]></Attributes>
+</O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="4" r="0" s="1">
+<O t="DSColumn">
+<Attributes dsName="ds1" columnName="年月"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="1"/>
+</C>
+<C c="0" r="1" rs="3" s="2">
+<O>
+<![CDATA[成本]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="1" r="1" rs="3" s="3">
+<O>
+<![CDATA[不含油可用吨公里成本]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="2" r="1" rs="3" s="2">
+<O>
+<![CDATA[40%]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="3" r="1" s="2">
+<O>
+<![CDATA[目标]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="4" r="1" s="4">
+<O t="DSColumn">
+<Attributes dsName="ds1" columnName="吨公里成本目标"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0"/>
+</C>
+<C c="3" r="2" s="2">
+<O>
+<![CDATA[月达成]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="4" r="2" s="5">
+<O t="XMLable" class="com.fr.base.Formula">
+<Attributes>
+<![CDATA[=ds2.select(年度累计吨公里成本, 年月 = E1)]]></Attributes>
+</O>
+<PrivilegeControl/>
+<Expand dir="1" upParentDefault="false" up="E1"/>
+</C>
+<C c="3" r="3" s="2">
+<O>
+<![CDATA[年累计]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="4" r="3" s="6">
+<O t="XMLable" class="com.fr.base.Formula">
+<Attributes>
+<![CDATA[=ds3.select(年度累计吨公里成本, 年月 = E1)]]></Attributes>
+</O>
+<PrivilegeControl/>
+<HighlightList>
+<Highlight class="com.fr.report.cell.cellattr.highlight.DefaultHighlight">
+<Name>
+<![CDATA[条件属性1]]></Name>
+<Condition class="com.fr.data.condition.ListCondition">
+<JoinCondition join="0">
+<Condition class="com.fr.data.condition.FormulaCondition">
+<Formula>
+<![CDATA[E1 >= format(today(), "yyyyMM")]]></Formula>
+</Condition>
+</JoinCondition>
+<JoinCondition join="0">
+<Condition class="com.fr.data.condition.FormulaCondition">
+<Formula>
+<![CDATA[right(E1, 2) != '全年']]></Formula>
+</Condition>
+</JoinCondition>
+</Condition>
+<HighlightAction class="com.fr.report.cell.cellattr.highlight.ValueHighlightAction">
+<O>
+<![CDATA[]]></O>
+</HighlightAction>
+</Highlight>
+</HighlightList>
+<Expand dir="1" upParentDefault="false" up="E1"/>
+</C>
+<C c="0" r="4" rs="3" s="2">
+<O>
+<![CDATA[客户]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="1" r="4" rs="3" s="3">
+<O>
+<![CDATA[考核准点率]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="2" r="4" rs="3" s="2">
+<O>
+<![CDATA[15%]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="3" r="4" s="2">
+<O>
+<![CDATA[目标]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="4" r="4" s="7">
+<O t="DSColumn">
+<Attributes dsName="ds1" columnName="考核准点率目标"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0"/>
+</C>
+<C c="3" r="5" s="2">
+<O>
+<![CDATA[月达成]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="4" r="5" s="8">
+<O t="DSColumn">
+<Attributes dsName="ds1" columnName="考核准点率"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0"/>
+</C>
+<C c="3" r="6" s="2">
+<O>
+<![CDATA[年累计]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="4" r="6" s="7">
+<O t="DSColumn">
+<Attributes dsName="ds1" columnName="考核准点率年度累计"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0"/>
+</C>
+<C c="0" r="7" rs="4" s="2">
+<O>
+<![CDATA[风控]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="1" r="7" rs="2" s="3">
+<O>
+<![CDATA[人为原因的严重差错万时率]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="2" r="7" rs="2" s="2">
+<O>
+<![CDATA[30%]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="3" r="7" s="2">
+<O>
+<![CDATA[目标]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="4" r="7" s="4">
+<PrivilegeControl/>
+<HighlightList>
+<Highlight class="com.fr.report.cell.cellattr.highlight.DefaultHighlight">
+<Name>
+<![CDATA[条件属性1]]></Name>
+<Condition class="com.fr.data.condition.FormulaCondition">
+<Formula>
+<![CDATA[right(E1, 2) = "全年"]]></Formula>
+</Condition>
+<HighlightAction class="com.fr.report.cell.cellattr.highlight.ValueHighlightAction">
+<O>
+<![CDATA[1.2]]></O>
+</HighlightAction>
+</Highlight>
+<Highlight class="com.fr.report.cell.cellattr.highlight.DefaultHighlight">
+<Name>
+<![CDATA[条件属性2]]></Name>
+<Condition class="com.fr.data.condition.FormulaCondition">
+<Formula>
+<![CDATA[right(E1, 2) != '全年']]></Formula>
+</Condition>
+<HighlightAction class="com.fr.report.cell.cellattr.highlight.ValueHighlightAction">
+<O>
+<![CDATA[/]]></O>
+</HighlightAction>
+</Highlight>
+</HighlightList>
+<Expand dir="1" upParentDefault="false" up="E1"/>
+</C>
+<C c="3" r="8" s="2">
+<O>
+<![CDATA[年累计]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="4" r="8" s="5">
+<O t="DSColumn">
+<Attributes dsName="ds1" columnName="万时率"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<HighlightList>
+<Highlight class="com.fr.report.cell.cellattr.highlight.DefaultHighlight">
+<Name>
+<![CDATA[条件属性1]]></Name>
+<Condition class="com.fr.data.condition.ListCondition">
+<JoinCondition join="0">
+<Condition class="com.fr.data.condition.FormulaCondition">
+<Formula>
+<![CDATA[E1 >= format(today(), "yyyyMM")]]></Formula>
+</Condition>
+</JoinCondition>
+<JoinCondition join="0">
+<Condition class="com.fr.data.condition.FormulaCondition">
+<Formula>
+<![CDATA[right(E1, 2) != '全年']]></Formula>
+</Condition>
+</JoinCondition>
+</Condition>
+<HighlightAction class="com.fr.report.cell.cellattr.highlight.ValueHighlightAction">
+<O>
+<![CDATA[]]></O>
+</HighlightAction>
+</Highlight>
+</HighlightList>
+<Expand dir="1"/>
+</C>
+<C c="1" r="9" rs="2" s="3">
+<O>
+<![CDATA[人为原因的事故/征候发生值]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="2" r="9" rs="2" s="2">
+<O>
+<![CDATA[一票否决项\t]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="3" r="9" s="2">
+<O>
+<![CDATA[目标]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="4" r="9" s="4">
+<PrivilegeControl/>
+<HighlightList>
+<Highlight class="com.fr.report.cell.cellattr.highlight.DefaultHighlight">
+<Name>
+<![CDATA[条件属性1]]></Name>
+<Condition class="com.fr.data.condition.FormulaCondition">
+<Formula>
+<![CDATA[right(E1, 2) = '全年']]></Formula>
+</Condition>
+<HighlightAction class="com.fr.report.cell.cellattr.highlight.ValueHighlightAction">
+<O>
+<![CDATA[0]]></O>
+</HighlightAction>
+</Highlight>
+<Highlight class="com.fr.report.cell.cellattr.highlight.DefaultHighlight">
+<Name>
+<![CDATA[条件属性2]]></Name>
+<Condition class="com.fr.data.condition.FormulaCondition">
+<Formula>
+<![CDATA[right(E1, 2) != '全年']]></Formula>
+</Condition>
+<HighlightAction class="com.fr.report.cell.cellattr.highlight.ValueHighlightAction">
+<O>
+<![CDATA[/]]></O>
+</HighlightAction>
+</Highlight>
+</HighlightList>
+<Expand dir="1"/>
+</C>
+<C c="3" r="10" s="2">
+<O>
+<![CDATA[年累计]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="4" r="10" s="9">
+<O t="DSColumn">
+<Attributes dsName="ds1" columnName="事件数量"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<CellPageAttr/>
+<HighlightList>
+<Highlight class="com.fr.report.cell.cellattr.highlight.DefaultHighlight">
+<Name>
+<![CDATA[当前月份及以后为空]]></Name>
+<Condition class="com.fr.data.condition.ListCondition">
+<JoinCondition join="0">
+<Condition class="com.fr.data.condition.FormulaCondition">
+<Formula>
+<![CDATA[E1 >= format(today(), "yyyyMM")]]></Formula>
+</Condition>
+</JoinCondition>
+<JoinCondition join="0">
+<Condition class="com.fr.data.condition.FormulaCondition">
+<Formula>
+<![CDATA[right(E1, 2) != "全年"]]></Formula>
+</Condition>
+</JoinCondition>
+</Condition>
+<HighlightAction class="com.fr.report.cell.cellattr.highlight.ValueHighlightAction">
+<O>
+<![CDATA[]]></O>
+</HighlightAction>
+</Highlight>
+<Highlight class="com.fr.report.cell.cellattr.highlight.DefaultHighlight">
+<Name>
+<![CDATA[事故及征候大于0标红]]></Name>
+<Condition class="com.fr.data.condition.FormulaCondition">
+<Formula>
+<![CDATA[E11 > 0]]></Formula>
+</Condition>
+<HighlightAction class="com.fr.report.cell.cellattr.highlight.FRFontHighlightAction">
+<FRFont name="微软雅黑" style="1" size="72" foreground="-65536"/>
+</HighlightAction>
+</Highlight>
+</HighlightList>
+<CellInsertPolicy/>
+<Expand dir="1"/>
+</C>
+</CellElementList>
+<ReportAttrSet>
+<ReportSettings headerHeight="0" footerHeight="0">
+<PaperSetting orientation="1">
+<PaperSize width="42768000" height="60480000"/>
+<Margin top="986400" left="2743200" bottom="986400" right="2743200"/>
+</PaperSetting>
+<Background name="ColorBackground" color="-1"/>
+</ReportSettings>
+<Header reportPageType="0">
+<Background name="NullBackground"/>
+<LeftList/>
+<CenterList/>
+<RightList/>
+</Header>
+<Footer reportPageType="0">
+<Background name="NullBackground"/>
+<LeftList/>
+<CenterList/>
+<RightList/>
+</Footer>
+</ReportAttrSet>
+<PrivilegeControl/>
+</Report>
+<ReportParameterAttr>
+<Attributes showWindow="true" delayPlaying="false" windowPosition="1" align="0" useParamsTemplate="true" currentIndex="5"/>
+<PWTitle>
+<![CDATA[参数]]></PWTitle>
+<ParameterUI class="com.fr.form.main.parameter.FormParameterUI">
+<Parameters/>
+<Layout class="com.fr.form.ui.container.WParameterLayout">
+<WidgetName name="para"/>
+<WidgetAttr description="">
+<MobileBookMark useBookMark="false" bookMarkName="" frozen="false"/>
+<PrivilegeControl/>
+</WidgetAttr>
+<Margin top="0" left="0" bottom="0" right="0"/>
+<Border>
+<border style="0" color="-723724" borderRadius="0" type="0" borderStyle="0"/>
+<WidgetTitle>
+<O>
+<![CDATA[新建标题]]></O>
+<FRFont name="SimSun" style="0" size="72"/>
+<Position pos="0"/>
+</WidgetTitle>
+<Alpha alpha="1.0"/>
+</Border>
+<Background name="ColorBackground" color="-526086"/>
+<LCAttr vgap="0" hgap="0" compInterval="0"/>
+<Widget class="com.fr.form.ui.container.WAbsoluteLayout$BoundsWidget">
+<InnerWidget class="com.fr.form.ui.Label">
+<WidgetName name="label0"/>
+<WidgetID widgetID="fbda1e52-0b00-4fdb-97b3-ff83d4b00c67"/>
+<WidgetAttr description="">
+<MobileBookMark useBookMark="false" bookMarkName="" frozen="false"/>
+<PrivilegeControl/>
+</WidgetAttr>
+<widgetValue>
+<O>
+<![CDATA[年份：]]></O>
+</widgetValue>
+<LabelAttr verticalcenter="true" textalign="4" autoline="true"/>
+<FRFont name="微软雅黑" style="0" size="80"/>
+<border style="0" color="-723724"/>
+</InnerWidget>
+<BoundsAttr x="32" y="20" width="80" height="21"/>
+</Widget>
+<Widget class="com.fr.form.ui.container.WAbsoluteLayout$BoundsWidget">
+<InnerWidget class="com.fr.form.parameter.FormSubmitButton">
+<WidgetName name="Search"/>
+<LabelName name="月份："/>
+<WidgetAttr description="">
+<MobileBookMark useBookMark="false" bookMarkName="" frozen="false"/>
+<PrivilegeControl/>
+</WidgetAttr>
+<Text>
+<![CDATA[查询]]></Text>
+<Hotkeys>
+<![CDATA[enter]]></Hotkeys>
+<initial>
+<Background name="ColorBackground" color="-7354923"/>
+</initial>
+<over>
+<Background name="ColorBackground" color="-10114884"/>
+</over>
+<click>
+<Background name="ColorBackground" color="-7158826"/>
+</click>
+<FRFont name="微软雅黑" style="0" size="72" foreground="-1"/>
+<isCustomType isCustomType="true"/>
+</InnerWidget>
+<BoundsAttr x="262" y="20" width="80" height="21"/>
+</Widget>
+<Widget class="com.fr.form.ui.container.WAbsoluteLayout$BoundsWidget">
+<InnerWidget class="com.fr.form.ui.ComboBox">
+<Listener event="afteredit">
+<JavaScript class="com.fr.js.JavaScriptImpl">
+<Parameters/>
+<Content>
+<![CDATA[_g().parameterCommit();]]></Content>
+</JavaScript>
+</Listener>
+<WidgetName name="mth"/>
+<LabelName name="年份："/>
+<WidgetID widgetID="54adfb48-bb54-40df-afac-1ef6c0e8009e"/>
+<WidgetAttr description="">
+<MobileBookMark useBookMark="false" bookMarkName="" frozen="false"/>
+<PrivilegeControl/>
+</WidgetAttr>
+<allowBlank>
+<![CDATA[false]]></allowBlank>
+<Dictionary class="com.fr.data.impl.CustomDictionary">
+<CustomDictAttr>
+<Dict key="2020" value="2020"/>
+<Dict key="2021" value="2021"/>
+<Dict key="2022" value="2022"/>
+</CustomDictAttr>
+</Dictionary>
+<widgetValue>
+<O t="XMLable" class="com.fr.base.Formula">
+<Attributes>
+<![CDATA[=format(MONTHDELTA(today(),-1),"yyyy")]]></Attributes>
+</O>
+</widgetValue>
+</InnerWidget>
+<BoundsAttr x="112" y="20" width="101" height="21"/>
+</Widget>
+<ShowBookmarks showBookmarks="false"/>
+<Sorted sorted="false"/>
+<MobileWidgetList>
+<Widget widgetName="mth"/>
+<Widget widgetName="Search"/>
+</MobileWidgetList>
+<FrozenWidgets/>
+<MobileBookMarkStyle class="com.fr.form.ui.mobile.impl.DefaultMobileBookMarkStyle"/>
+<Display display="true"/>
+<DelayDisplayContent delay="false"/>
+<UseParamsTemplate use="true"/>
+<Position position="0"/>
+<Design_Width design_width="960"/>
+<NameTagModified>
+<TagModified tag="mth" modified="true"/>
+<TagModified tag="Search" modified="true"/>
+</NameTagModified>
+<WidgetNameTagMap>
+<NameTag name="mth" tag="年份："/>
+<NameTag name="Search" tag="月份："/>
+</WidgetNameTagMap>
+<ParamAttr class="com.fr.report.mobile.DefaultMobileParamStyle"/>
+<ParamStyle class="com.fr.report.mobile.EmptyMobileParamStyle"/>
+</Layout>
+<DesignAttr width="960" height="80"/>
+</ParameterUI>
+</ReportParameterAttr>
+<StyleList>
+<Style horizontal_alignment="0" imageLayout="1">
+<FRFont name="微软雅黑" style="1" size="96"/>
+<Background name="ColorBackground" color="-10114884"/>
+<Border>
+<Top style="1" color="-1"/>
+<Bottom style="1" color="-1"/>
+<Left style="1" color="-1"/>
+<Right style="1" color="-1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" imageLayout="1">
+<FRFont name="微软雅黑" style="1" size="72"/>
+<Background name="ColorBackground" color="-7223594"/>
+<Border>
+<Top style="1" color="-1"/>
+<Bottom style="1" color="-1"/>
+<Left style="1" color="-1"/>
+<Right style="1" color="-1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" imageLayout="1">
+<FRFont name="微软雅黑" style="0" size="80"/>
+<Background name="ColorBackground" color="-7223594"/>
+<Border>
+<Top style="1" color="-1"/>
+<Bottom style="1" color="-1"/>
+<Left style="1" color="-1"/>
+<Right style="1" color="-1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="2" imageLayout="1">
+<FRFont name="微软雅黑" style="0" size="80"/>
+<Background name="ColorBackground" color="-7223594"/>
+<Border>
+<Top style="1" color="-1"/>
+<Bottom style="1" color="-1"/>
+<Left style="1" color="-1"/>
+<Right style="1" color="-1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" imageLayout="1">
+<FRFont name="微软雅黑" style="0" size="72"/>
+<Background name="ColorBackground" color="-2758673"/>
+<Border>
+<Top style="1" color="-1"/>
+<Bottom style="1" color="-1"/>
+<Left style="1" color="-1"/>
+<Right style="1" color="-1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" imageLayout="1">
+<Format class="com.fr.base.CoreDecimalFormat" roundingMode="6">
+<![CDATA[#0.00]]></Format>
+<FRFont name="微软雅黑" style="0" size="72"/>
+<Background name="ColorBackground" color="-4531745"/>
+<Border>
+<Top style="1" color="-1"/>
+<Bottom style="1" color="-1"/>
+<Left style="1" color="-1"/>
+<Right style="1" color="-1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" imageLayout="1">
+<Format class="com.fr.base.CoreDecimalFormat" roundingMode="6">
+<![CDATA[#0.00]]></Format>
+<FRFont name="微软雅黑" style="0" size="72"/>
+<Background name="ColorBackground" color="-2758673"/>
+<Border>
+<Top style="1" color="-1"/>
+<Bottom style="1" color="-1"/>
+<Left style="1" color="-1"/>
+<Right style="1" color="-1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" imageLayout="1">
+<Format class="com.fr.base.CoreDecimalFormat" roundingMode="6">
+<![CDATA[#0.00%]]></Format>
+<FRFont name="微软雅黑" style="0" size="72"/>
+<Background name="ColorBackground" color="-4531745"/>
+<Border>
+<Top style="1" color="-1"/>
+<Bottom style="1" color="-1"/>
+<Left style="1" color="-1"/>
+<Right style="1" color="-1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" imageLayout="1">
+<Format class="com.fr.base.CoreDecimalFormat" roundingMode="6">
+<![CDATA[#0.00%]]></Format>
+<FRFont name="微软雅黑" style="0" size="72"/>
+<Background name="ColorBackground" color="-2758673"/>
+<Border>
+<Top style="1" color="-1"/>
+<Bottom style="1" color="-1"/>
+<Left style="1" color="-1"/>
+<Right style="1" color="-1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" imageLayout="1">
+<FRFont name="微软雅黑" style="0" size="72"/>
+<Background name="ColorBackground" color="-4531745"/>
+<Border>
+<Top style="1" color="-1"/>
+<Bottom style="1" color="-1"/>
+<Left style="1" color="-1"/>
+<Right style="1" color="-1"/>
+</Border>
+</Style>
+</StyleList>
+<DesignerVersion DesignerVersion="KAA"/>
+<PreviewType PreviewType="0"/>
+<StrategyConfigsAttr class="com.fr.esd.core.strategy.persistence.StrategyConfigsAttr" pluginID="com.fr.plugin.esd" plugin-version="1.5.4">
+<StrategyConfigs/>
+</StrategyConfigsAttr>
+<TemplateIdAttMark class="com.fr.base.iofile.attr.TemplateIdAttrMark">
+<TemplateIdAttMark TemplateId="92e06c7b-f118-453c-9b10-e0f411e12c19"/>
+</TemplateIdAttMark>
+</WorkBook>
